@@ -7,9 +7,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "db:migrate": "knex migrate:latest",
-    "db:rollback": "knex migrate:rollback",
-    "db:make": "knex migrate:make"
+    "db:migrate": "knex migrate:latest --knexfile src/knexfile.ts",
+    "db:rollback": "knex migrate:rollback --knexfile src/knexfile.ts",
+    "db:make": "knex migrate:make --knexfile src/knexfile.ts"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.1",

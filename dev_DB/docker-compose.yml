@@ -4,14 +4,14 @@ services:
   postgres:
     image: postgres:14.8-alpine3.18
     env_file:
-      - ../.env
+      - .env
     environment:
-      - POSTGRES_DB=wb_tariffs
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5440:5432"
+      - "5450:5432"
 volumes:
   postgres_data: 
