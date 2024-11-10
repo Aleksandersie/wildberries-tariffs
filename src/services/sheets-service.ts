@@ -31,7 +31,6 @@ export const updateSheets = async (
 
       const sheet = spreadsheet.data.sheets?.[0];
 
-      console.log(sheet);
 
       const values = [
         [
@@ -62,12 +61,10 @@ export const updateSheets = async (
         requestBody: { values },
       });
 
-      // Применяем форматирование и сортировку
       await sheets.spreadsheets.batchUpdate({
         spreadsheetId: tabId,
         requestBody: {
           requests: [
-            // Форматирование заголовков
             {
               repeatCell: {
                 range: {
@@ -75,69 +72,114 @@ export const updateSheets = async (
                   startRowIndex: 0,
                   endRowIndex: 1,
                   startColumnIndex: 0,
-                  endColumnIndex: 7,
+                  endColumnIndex: 7
                 },
                 cell: {
                   userEnteredFormat: {
                     backgroundColor: { red: 0.8, green: 0.8, blue: 0.8 },
-                    textFormat: { bold: true },
-                    horizontalAlignment: "CENTER",
-                    padding: {
-                      left: 10,
-                      right: 10,
-                      top: 10,
-                      bottom: 10,
+                    textFormat: { 
+                      bold: true,
+                      fontSize: 11
                     },
-                  },
+                    horizontalAlignment: 'CENTER',
+                    verticalAlignment: 'MIDDLE',
+                    padding: {
+                      top: 8,
+                      right: 8,
+                      bottom: 8,
+                      left: 8
+                    },
+                    wrapStrategy: 'WRAP'
+                  }
                 },
-                fields:
-                  "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)",
-              },
-            }, 
-            // Автоматическая ширина колонок
-            {
-              autoResizeDimensions: {
-                dimensions: {
-                  sheetId: sheet?.properties?.sheetId,
-                  dimension: "COLUMNS",
-                  startIndex: 0,
-                  endIndex: 7,
-                },
-              },
+                fields: 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment,padding,wrapStrategy)'
+              }
             },
-            // Добавляем сортировку по колонке "Доставка и хранение"
+            {
+              repeatCell: {
+                range: {
+                  sheetId: sheet?.properties?.sheetId,
+                  startRowIndex: 1,
+                  startColumnIndex: 0,
+                  endColumnIndex: 7
+                },
+                cell: {
+                  userEnteredFormat: {
+                    horizontalAlignment: 'CENTER',
+                    verticalAlignment: 'MIDDLE',
+                    padding: {
+                      top: 4,
+                      right: 4,
+                      bottom: 4,
+                      left: 4
+                    }
+                  }
+                },
+                fields: 'userEnteredFormat(horizontalAlignment,verticalAlignment,padding)'
+              }
+            },
+            {
+              updateDimensionProperties: {
+                range: {
+                  sheetId: sheet?.properties?.sheetId,
+                  dimension: 'COLUMNS',
+                  startIndex: 0,
+                  endIndex: 1
+                },
+                properties: {
+                  pixelSize: 120
+                },
+                fields: 'pixelSize'
+              }
+            },
+            {
+              updateDimensionProperties: {
+                range: {
+                  sheetId: sheet?.properties?.sheetId,
+                  dimension: 'COLUMNS',
+                  startIndex: 1,
+                  endIndex: 2
+                },
+                properties: {
+                  pixelSize: 250
+                },
+                fields: 'pixelSize'
+              }
+            },
+            {
+              updateDimensionProperties: {
+                range: {
+                  sheetId: sheet?.properties?.sheetId,
+                  dimension: 'COLUMNS',
+                  startIndex: 2,
+                  endIndex: 7
+                },
+                properties: {
+                  pixelSize: 150 
+                },
+                fields: 'pixelSize'
+              }
+            },
             {
               sortRange: {
                 range: {
                   sheetId: sheet?.properties?.sheetId,
-                  startRowIndex: 1, // Начинаем с первой строки после заголовков
+                  startRowIndex: 1,
                   endRowIndex: values.length,
                   startColumnIndex: 0,
-                  endColumnIndex: 7,
+                  endColumnIndex: 7
                 },
                 sortSpecs: [
                   {
-                    dimensionIndex: 2, // Индекс колонки "Доставка и хранение" (0-based)
-                    sortOrder: "ASCENDING",
-                  },
-                ],
-              },
-            },
-          ],
-        },
+                    dimensionIndex: 2,
+                    sortOrder: 'ASCENDING'
+                  }
+                ]
+              }
+            }
+          ]
+        }
       });
-
-      // await sheets.spreadsheets.values.clear({
-      //   spreadsheetId: tabId,
-      //   range,
-      // });
-
-      // await sheets.spreadsheets.values.append({
-      //   spreadsheetId: tabId,
-      //   range,
-      //   valueInputOption: 'USER_ENTERED',
-      //   requestBody: { values }
-      // });
 
       console.log("Sheet updated successfully");
     } catch (error) {
