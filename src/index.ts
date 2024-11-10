@@ -11,7 +11,7 @@ const config: Config = {
     token: process.env.WB_SECRET_KEY || ''
   },
   sheets: {
-    spreadsheetId: process.env.SHEET_ID || '',
+    spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID || '',
     ranges: ['Sheet1!A:D']
   },
   database: {
