@@ -1,21 +1,20 @@
-# Переменные окружения
+
 .env
 
 # Учетные данные
 credentials.json
 
-# Зависимости
+
 node_modules/
 
-# Скомпилированные файлы
+
 dist/
 
-# Логи
+
 *.log
 
-# IDE
+
 .idea/
 .vscode/
 
-# Тесты
 coverage/ 

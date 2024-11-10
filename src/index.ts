@@ -1,9 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import knex from 'knex';
 import { Config } from './types';
 import { fetchTariffs } from './services/wb-service';
-import { saveTariffs } from './services/db-service';
 import { updateSheets } from './services/sheets-service';
 
 const config: Config = {
@@ -25,27 +23,14 @@ const config: Config = {
   }
 };
 
-const db = knex({
-  client: 'pg',
-  connection: {
-    host: config.database.host,
-    port: config.database.port,
-    database: config.database.name,
-    user: config.database.user,
-    password: config.database.password
-  }
-});
+
 
 const updateTariffs = async (): Promise<void> => {
   try {
-    console.log(config);
-    const tariffs = await fetchTariffs(config.wb.apiUrl);
-   
-    await saveTariffs(db, tariffs);
-   // await updateSheets(tariffs, config.sheets);
-    console.log('Tariffs updated successfully');
+    const tariffs = await fetchTariffs();
+    await updateSheets(tariffs, process.env.GOOGLE_SPREADSHEET_ID || '');
   } catch (error) {
-    console.error('Error in update cycle:', error);
+    console.error('Error:', error);
   }
 };
 
