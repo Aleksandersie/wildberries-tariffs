@@ -1,18 +1,10 @@
-
-.env
-
-# Учетные данные
-credentials.json
-
-
 node_modules/
-
-
 dist/
-
+.env
+credentials.json
+credentials/*.json
 
 *.log
-
 
 .idea/
 .vscode/

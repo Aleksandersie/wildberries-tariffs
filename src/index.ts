@@ -1,10 +1,14 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import { Config } from './types';
 import { fetchTariffs } from './services/wb-service';
 import { updateSheets } from './services/sheets-service';
+import { saveTariffs } from './services/db-service';
+dotenv.config();
 
-const config: Config = {
+
+
+
+const appConfig: Config = {
   wb: {
     apiUrl: process.env.WB_API_URL || '',
     updateInterval: parseInt(process.env.UPDATE_INTERVAL || '3600000'),
@@ -28,6 +32,7 @@ const config: Config = {
 const updateTariffs = async (): Promise<void> => {
   try {
     const tariffs = await fetchTariffs();
+    await saveTariffs( tariffs);
     await updateSheets(tariffs, process.env.GOOGLE_SPREADSHEET_ID || '');
   } catch (error) {
     console.error('Error:', error);
@@ -36,7 +41,7 @@ const updateTariffs = async (): Promise<void> => {
 
 const startApp = (): void => {
   updateTariffs();
-  setInterval(updateTariffs, config.wb.updateInterval);
+  setInterval(updateTariffs, appConfig.wb.updateInterval);
 };
 
 startApp(); 

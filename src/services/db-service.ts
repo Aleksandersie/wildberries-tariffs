@@ -1,13 +1,15 @@
-import { Knex } from 'knex';
+import { knex,Knex } from 'knex';
 import { WBWarehouseTariff } from '../types';
+import config from '../knexfile';   
 
 const parseNumber = (value: string): number => {
-  // Заменяем запятую на точку и преобразуем в число
   return parseFloat(value.replace(',', '.'));
 };
 
+
+const db: Knex = knex(config);
 export const saveTariffs = async (
-  db: Knex,
+
   tariff: WBWarehouseTariff[]
 ): Promise<void> => {
   try {
@@ -28,12 +30,3 @@ export const saveTariffs = async (
   }
 };
 
-export const getTariffsForDate = async (
-  db: Knex,
-  date: string
-): Promise<any[]> => {
-  return db('tariffs')
-    .where('date', date)
-    .orderBy('warehouse_name')
-    .select('*');
-}; 
